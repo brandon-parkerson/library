@@ -1,9 +1,9 @@
 const myLibrary = [];
 const card = document.querySelector(".card");
-card.innerHTML = "";
-//addToLibrary();
-const newBookButton = document.querySelector(".new-button");
-const submitButton = document.querySelector(".submit");
+
+
+
+const submitButton = document.querySelector(".submit-btn");
 
 function Book(title, author, pages, readStatus) {
     this.author = author;
@@ -23,73 +23,96 @@ function Book(title, author, pages, readStatus) {
 //myLibrary.push(myBook);
 
 
-function addToLibrary() {
-    // Display form asking for title, author, num of pages, and read status
-    const form = document.createElement("form");
-    const titleInput = document.createElement("input");
-    titleInput.type = `text`;
-    titleInput.name = `title`;
-    titleInput.placeholder = `Title`;
-    const authorInput = document.createElement("input");
-    authorInput.type = `text`;
-    authorInput.name = `author`;
-    authorInput.placeholder = `Author`;
-    const pagesInput = document.createElement("input");
-    pagesInput.type = `text`;
-    pagesInput.name = `pages`;
-    pagesInput.placeholder = `Pages`;
-    const readInput = document.createElement("input");
-    readInput.type = `text`;
-    readInput.name = `read-status`;
-    readInput.placeholder = `Read status`;
-
-    const submit = document.createElement(`button`);
-    submit.textContent = `Submit`;
-    submit.classList.add("submit"); 
-
+function addToLibrary(newBook) {
 
     
-
-    form.appendChild(titleInput);
-    form.appendChild(authorInput);
-    form.appendChild(pagesInput);
-    form.appendChild(readInput);
-    form.appendChild(submit);
-    card.appendChild(form);
     
-    // Push inputs to array
-    //let newBook = new Book(title, author, pages, readStatus);
-    myLibrary.push(newBook);
     // Display new added book
-    let remove = document.createElement("button");
-    let index = myLibrary.indexOf(`${newBook}`);
-    remove.setAttribute(`data-index-number`, `${index}`);
-    remove.classList.add("remove");
-    remove.textContent = `Remove`;
+    
     let para = document.createElement("p");
     para.innerText = newBook.info();
     card.appendChild(para);
+    let remove = document.createElement("button");
+    remove.innerText = "Remove";
+    remove.classList.add("remove");
+    remove.setAttribute("data-index-number", myLibrary.length - 1);
+    remove.addEventListener("click", removeBook);
     card.appendChild(remove);
-    
 };
-for (let i = 0; i < myLibrary.length; i++) {
-    let paragraph = document.createElement("p");
-    console.log(myLibrary[i]);
-    let currentBook = myLibrary[i];
-    paragraph.innerText = currentBook.info();
-    card.appendChild(paragraph);
+
+function createLibrary() {
+    card.innerHTML = "";
+    myLibrary.forEach((book, index) => {
+        let paragraph = document.createElement("p");
+        paragraph.innerText = book.info();
+        card.appendChild(paragraph);
+
+        let toggleButton = document.createElement("button");
+        toggleButton.textContent = book.readStatus === "read" ? "Mark as Unread" : "Mark as Read";
+        toggleButton.setAttribute("data-index-number", index);
+        toggleButton.addEventListener("click", toggleReadStatus);
+        card.appendChild(toggleButton);
+
+        let remove = document.createElement("button");
+        remove.textContent = "Remove";
+        remove.classList.add("remove");
+        remove.setAttribute("data-index-number", index);
+        remove.addEventListener("click", removeBook);
+        card.appendChild(remove);
+    });
 };
-//submitButton.addEventListener("click", removeBook);
 
 
+function removeBook(event) {
+    let index = event.target.getAttribute("data-index-number");
+    myLibrary.splice(index, 1);
+    createLibrary();
+};
+
+function submitHandler(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const title = formData.get("title");
+    const author = formData.get("author");
+    const pages = formData.get("pages");
+    const readStatus = formData.get("read-status");
+
+    const newBook = new Book(title, author, pages, readStatus);
+    myLibrary.push(newBook);
+    addToLibrary(newBook);
+
+    form.reset();
+    form.remove();
+};
 
 
-newBookButton.addEventListener("click", addNewBook);
+document.addEventListener("DOMContentLoaded", function(){
+    const newBookButton = document.querySelector(".new-button");
+    newBookButton.addEventListener("click", addNewBook);
+}
+);
+
 
 function addNewBook(event) {
     event.preventDefault();
-    addToLibrary();
-    
+    const form = document.createElement("form");
+    form.innerHTML = `
+        <input type="text" name="title" placeholder="Title">
+        <input type="text" name="author" placeholder="Author">
+        <input type="text" name="pages" placeholder="Pages">
+        <input type="text" name="read-status" placeholder="Read status">
+        <button type="submit">Submit</button>
+    `;
+    form.addEventListener("submit", submitHandler);
+    card.appendChild(form);
+};
+
+function toggleReadStatus(event) {
+    let index = event.target.getAttribute("data-index-number");
+    let book = myLibrary[index];
+    book.readStatus = book.readStatus === "read" ? "unread" : "read";
+    createLibrary();
 };
 
 
