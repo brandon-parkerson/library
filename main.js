@@ -10,7 +10,9 @@ const myLibrary = [];
 
 
 
-newBookBtn.addEventListener("click", addBookToLibrary);
+newBookBtn.addEventListener("click", () => {
+  form.style.display = "flex";
+});
 
 
 
@@ -22,24 +24,17 @@ function Book(title, author, pages, readStatus) {
   this.readStatus = readStatus;
 };
 
-function addBookToLibrary() {
-  // do stuff here
-    form.style.display = "flex";
-    let title = bookTitle.value;
-    let author = bookAuthor.value;
-    let pages = bookPages.value;
-    let readStatus = bookReadStatus.value;
+submit.addEventListener("click", (event) => {
+  event.preventDefault();
 
-    let newBook = new Book(title, author, pages, readStatus);
-    
-    submit.addEventListener("click", function(event){
-        event.preventDefault();
-        myLibrary.push(newBook);
-        form.reset();
-        console.log(myLibrary);
-    });
-    
-    //myLibrary.push(newBook);
+  const title = bookTitle.value;
+  const author = bookAuthor.value;
+  const pages = bookPages.value;
+  const readStatus = bookReadStatus.checked; // Check if checkbox is checked
 
-
-};
+  const newBook = new Book(title, author, pages, readStatus);
+  myLibrary.push(newBook);
+  form.reset();
+  form.style.display = "none";
+  console.log(myLibrary);
+});
