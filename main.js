@@ -17,22 +17,43 @@ newBookBtn.addEventListener("click", () => {
 
 
 
-function Book(title, author, pages, readStatus) {
-  // the constructor...
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.readStatus = readStatus;
-  if (this.readStatus === true) {
-    this.readStatus = `already read`;
+// function Book(title, author, pages, readStatus) {
+//   // the constructor...
+//   this.title = title;
+//   this.author = author;
+//   this.pages = pages;
+//   this.readStatus = readStatus;
+//   if (this.readStatus === true) {
+//     this.readStatus = `already read`;
+//   }
+//   else if (this.readStatus === false) {
+//     this.readStatus = `have not read`;
+//   };
+//   this.info = function() {
+//     return `${this.title} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
+//   }
+// };
+
+
+// Book class instead of a book factory function above
+class Book {
+  constructor(title, author, pages, readStatus) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.readStatus = readStatus;
+    if (this.readStatus === true) {
+      this.readStatus = `already read`;
+    }
+    else if (this.readStatus === false) {
+      this.readStatus = `have not read`;
+    };
+    
   }
-  else if (this.readStatus === false) {
-    this.readStatus = `have not read`;
-  };
-  this.info = function() {
+  info() {
     return `${this.title} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
   }
-};
+}
 
 submit.addEventListener("click", (event) => {
   event.preventDefault();
