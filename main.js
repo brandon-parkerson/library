@@ -9,31 +9,9 @@ const library = document.querySelector(".library");
 
 const myLibrary = [];
 
-
-
 newBookBtn.addEventListener("click", () => {
   form.style.display = "flex";
 });
-
-
-
-// function Book(title, author, pages, readStatus) {
-//   // the constructor...
-//   this.title = title;
-//   this.author = author;
-//   this.pages = pages;
-//   this.readStatus = readStatus;
-//   if (this.readStatus === true) {
-//     this.readStatus = `already read`;
-//   }
-//   else if (this.readStatus === false) {
-//     this.readStatus = `have not read`;
-//   };
-//   this.info = function() {
-//     return `${this.title} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
-//   }
-// };
-
 
 // Book class instead of a book factory function above
 class Book {
@@ -44,11 +22,9 @@ class Book {
     this.readStatus = readStatus;
     if (this.readStatus === true) {
       this.readStatus = `already read`;
-    }
-    else if (this.readStatus === false) {
+    } else if (this.readStatus === false) {
       this.readStatus = `have not read`;
-    };
-    
+    }
   }
   info() {
     return `${this.title} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
@@ -62,6 +38,13 @@ submit.addEventListener("click", (event) => {
   const author = bookAuthor.value;
   const pages = bookPages.value;
   const readStatus = bookReadStatus.checked; // Check if checkbox is checked
+  const input = document.querySelector("input[required]");
+  let isValid = form.checkValidity();
+
+  if (isValid === false) {
+    form.reportValidity();
+    return;
+  }
 
   const newBook = new Book(title, author, pages, readStatus);
   myLibrary.push(newBook);
@@ -79,8 +62,9 @@ function createLibrary() {
     library.appendChild(card);
 
     let toggleButton = document.createElement("button");
-    toggleButton.classList.add("toggle")
-    toggleButton.textContent = book.readStatus === "already read" ? "Mark as Unread" : "Mark as Read";
+    toggleButton.classList.add("toggle");
+    toggleButton.textContent =
+      book.readStatus === "already read" ? "Mark as Unread" : "Mark as Read";
     toggleButton.addEventListener("click", () => toggleReadStatus(index));
     card.appendChild(toggleButton);
 
@@ -90,16 +74,19 @@ function createLibrary() {
     remove.setAttribute("data-index-number", index);
     remove.addEventListener("click", removeBook);
     card.appendChild(remove);
-  })
+  });
 }
 
 function removeBook(event) {
   let index = event.target.getAttribute("data-index-number");
   myLibrary.splice(index, 1);
   createLibrary();
-};
+}
 
 function toggleReadStatus(index) {
-  myLibrary[index].readStatus = myLibrary[index].readStatus === "already read" ? "have not read" : "already read";
+  myLibrary[index].readStatus =
+    myLibrary[index].readStatus === "already read"
+      ? "have not read"
+      : "already read";
   createLibrary();
 }
