@@ -43,6 +43,7 @@ submit.addEventListener("click", (event) => {
 
   if (isValid === false) {
     form.reportValidity();
+    
     return;
   }
 
